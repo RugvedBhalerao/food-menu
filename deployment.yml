@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: food-menu-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: food-menu
+  template:
+    metadata:
+      labels:
+        app: food-menu
+    spec:
+      containers:
+      - name: food-menu
+        image: rugved28/food-menu:latest  # Update with your Docker image details
+        ports:
+        - containerPort: 80

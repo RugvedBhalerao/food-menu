@@ -25,16 +25,19 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t your-docker-hub-username/food-menu:latest .
-        docker push your-docker-hub-username/food-menu:latest
+      
+        docker build -t rugved28/food-menu:latest .
+        docker push rugved28/food-menu:latest
 
     - name: Deploy to Kubernetes
       uses: azure/k8s-deploy@v4
       with:
         manifests: |
+        
           ./deployment.yaml
           ./service.yaml
         images: |
-          your-docker-hub-username/food-menu:latest
+        
+          rugved28/food-menu:latest
         kubectl-version: 'latest'
         kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
