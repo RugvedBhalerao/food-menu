@@ -1,8 +1,8 @@
 # Use a lightweight web server image
 FROM nginx:alpine
 
-# Copy the content of the 'Food_Menu' directory to the default Nginx web server location
-COPY ./food_menu /usr/share/nginx/html
+# Copy the content of the 'food-menu' directory to the default Nginx web server location
+COPY . /usr/share/nginx/html
 
 # Expose port 80 to allow external access
 EXPOSE 80
