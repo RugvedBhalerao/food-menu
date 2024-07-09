@@ -9,6 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -17,19 +21,20 @@ jobs:
       uses: docker/setup-buildx-action@v1
 
     - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        tags: rugved28/food-menu:latest  # Update with your Docker image details
+      run: |
+        docker build -t your-docker-hub-username/food-menu:latest .
+        docker push your-docker-hub-username/food-menu:latest
 
     - name: Deploy to Kubernetes
-      uses: appleboy/kubectl-action@master
+      uses: azure/k8s-deploy@v4
       with:
-        kube_config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-        commands: apply -f deployment.yaml -f service.yaml
+        manifests: |
+          ./deployment.yaml
+          ./service.yaml
+        images: |
+          your-docker-hub-username/food-menu:latest
+        kubectl-version: 'latest'
+        kubeconfig: ${{ secrets.KUBE_CONFIG_DATA }}
